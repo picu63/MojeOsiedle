@@ -1,19 +1,19 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MO.Users.Data;
+using MO.Auth.Data;
 
-namespace MO.Users.Controllers
+namespace MO.Auth.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UserManager<AuthUser> _userManager;
         private readonly SignInManager<AuthUser> _signInManager;
         private readonly UsersDbContext _context;
 
-        public UsersController(UserManager<AuthUser> userManager, SignInManager<AuthUser> signInManager, UsersDbContext context)
+        public AuthController(UserManager<AuthUser> userManager, SignInManager<AuthUser> signInManager, UsersDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -40,10 +40,11 @@ namespace MO.Users.Controllers
         {
             if (_context.AppUsers.Any(u => u.Username == login.Username))
                 return BadRequest("User Already Exists");
-            var user = new AuthUser();
-            user.UserName = login.Username;
-
-            user.AppUser = new User() { Username = login.Username };
+            var user = new AuthUser
+            {
+                UserName = login.Username,
+                AppUser = new User() { Username = login.Username }
+            };
 
             var result = await _userManager.CreateAsync(user, login.Password);
             if (!result.Succeeded) return BadRequest(result.Errors.FirstOrDefault()?.Description);
@@ -59,8 +60,5 @@ namespace MO.Users.Controllers
         }
     }
 }
-public class Login
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
+
+public record Login(string Username, string Password);

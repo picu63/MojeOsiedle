@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MO.Server", "MO\Server\MO.Server.csproj", "{39516030-2FDD-4556-997F-8B94618905F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MO.Server", "MO\Server\MO.Server.csproj", "{39516030-2FDD-4556-997F-8B94618905F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MO.Client", "MO\Client\MO.Client.csproj", "{7C2716AE-A61C-469D-81DD-C849725F26D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MO.Client", "MO\Client\MO.Client.csproj", "{7C2716AE-A61C-469D-81DD-C849725F26D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MO.LiveChat", "MO.LiveChat\MO.LiveChat.csproj", "{9EE49022-ED4B-4A0D-B811-8290A7117930}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MO.LiveChat", "MO.LiveChat\MO.LiveChat.csproj", "{9EE49022-ED4B-4A0D-B811-8290A7117930}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MO.Users", "MO.Users\MO.Users.csproj", "{A970FE33-306A-47BF-8B3A-98A0B7CEC0BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MO.Auth", "MO.Users\MO.Auth.csproj", "{A970FE33-306A-47BF-8B3A-98A0B7CEC0BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

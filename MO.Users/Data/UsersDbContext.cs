@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace MO.Users.Data;
+namespace MO.Auth.Data;
 
 public class UsersDbContext : IdentityDbContext<AuthUser>
 {
@@ -19,6 +20,7 @@ public class AuthUser : IdentityUser
 
 public class User
 {
+    [Key]
     public long UserId { get; set; }
     public string Username { get; set; }
 }
