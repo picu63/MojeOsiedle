@@ -2,6 +2,7 @@ using Apis;
 using Microsoft.EntityFrameworkCore;
 using MO.LiveChat;
 using MO.LiveChat.Data;
+using MO.LiveChat.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<LiveChatDbContext>(optionsBuilder => optionsBuilde
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(x=>new UserService(builder.Configuration.GetSection("Apis:MOUsers").Value, new HttpClient()));
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
