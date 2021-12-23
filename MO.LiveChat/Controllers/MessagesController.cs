@@ -35,7 +35,7 @@ namespace MO.LiveChat.Controllers
         [ProducesResponseType(typeof(NewMessageResponse), 200)]
         public async Task<ActionResult<NewMessageResponse>> NewMessage(NewMessageRequest request)
         {
-            Message message = new Message() { GroupId = request.GroupId, UserId = request.UserId, Text = request.Text, CastDate = DateTime.UtcNow };
+            Message message = new Message() { GroupId = request.GroupId, ChatUserId = request.UserId, Text = request.Text, CastDate = DateTime.UtcNow };
             await context.Messages.AddAsync(message);
             await context.SaveChangesAsync();
             return Ok(new NewMessageResponse(message.MessageId));

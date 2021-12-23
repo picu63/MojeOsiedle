@@ -15,10 +15,15 @@ builder.Services.AddDbContext<LiveChatDbContext>(optionsBuilder => optionsBuilde
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped(x=>new UserService(builder.Configuration.GetSection("Apis:MOUsers").Value, new HttpClient()));
+builder.Services.AddSingleton(x=>new UserService(builder.Configuration.GetSection("Apis:MOAuth").Value, new HttpClient()));
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddHostedService<UserUpdater>();
-builder.Services.Configure<UserUpdaterConfiguration>(builder.Configuration.GetSection("UserUpdater"));
+builder.Services.AddTransient<ChatUsersService>();
+builder.Services.AddSingleton<UserUpdater>();
+builder.Services.AddOptions<UserUpdaterConfiguration>()
+    .Bind(builder.Configuration.GetSection("UserUpdater"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+//builder.Services.Configure<UserUpdaterConfiguration>(builder.Configuration.GetSection("UserUpdater"));
 
 var app = builder.Build();
 
@@ -34,5 +39,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Services.GetService<UserUpdater>().StartAsync(app.Services.GetService<IHostApplicationLifetime>().ApplicationStopping);
 
 app.Run();

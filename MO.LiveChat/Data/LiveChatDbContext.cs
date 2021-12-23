@@ -15,7 +15,7 @@ public class LiveChatDbContext : IdentityDbContext<AuthUser>
     }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Message> Messages { get; set; }
-    public DbSet<User> ChatUsers { get; set; }
+    public DbSet<ChatUser> ChatUsers { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,13 +36,13 @@ public class LiveChatDbContext : IdentityDbContext<AuthUser>
 
 public class AuthUser : IdentityUser
 {
-    public User User { get; set; }
+    public ChatUser ChatUser { get; set; }
 }
 
-public class User
+public class ChatUser
 {
     [Key]
-    public Guid UserId { get; set; }
+    public Guid ChatUserId { get; set; }
     public string Username { get; set; }
     public List<Message> Messages { get; set; }
     public List<Reaction> Reactions { get; set; }
@@ -57,9 +57,9 @@ public class Message
     [ForeignKey("GroupId")]
     public Group Group { get; set; }
     public List<Reaction> Reactions { get; set; }
-    public Guid UserId { get; set; }
-    [ForeignKey("UserId")]
-    public User User { get; set; }
+    public Guid ChatUserId { get; set; }
+    [ForeignKey("ChatUserId")]
+    public ChatUser ChatUser { get; set; }
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime CastDate { get; set; }
 }
@@ -76,9 +76,9 @@ public class Reaction
 {
     [Key]
     public Guid ReactionId { get; set; }
-    public Guid UserId { get; set; }
-    [ForeignKey("UserId")]
-    public User User { get; set; }
+    public Guid ChatUserId { get; set; }
+    [ForeignKey("ChatUserId")]
+    public ChatUser ChatUser { get; set; }
     public Guid MessageId { get; set; }
     //[ForeignKey("MessageId")]
     public Message Message { get; set; }

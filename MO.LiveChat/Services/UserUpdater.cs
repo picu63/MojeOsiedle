@@ -29,16 +29,23 @@ public class UserUpdater : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            logger.LogInformation("Updating users...");
+            var userUpdaterConfig = configuration.CurrentValue;
             try
             {
+                if (!userUpdaterConfig.Activated)
+                    continue;
+                logger.LogInformation("Updating users...");
                 await UpdateUsers();
                 logger.LogInformation("Users updated.");
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, 
+                logger.LogError(ex,
                     "Error occurred while updating users.");
+            }
+            finally
+            {
+                await Task.Delay(TimeSpan.FromSeconds(userUpdaterConfig.UpdaterTimeSpanInSec), stoppingToken);
             }
         }
     }
@@ -46,5 +53,11 @@ public class UserUpdater : BackgroundService
     private async Task UpdateUsers()
     {
         
+    }
+
+    public override Task StopAsync(CancellationToken cancellationToken)
+    {
+        logger.LogInformation("User updater stopping...");
+        return base.StopAsync(cancellationToken);
     }
 }
