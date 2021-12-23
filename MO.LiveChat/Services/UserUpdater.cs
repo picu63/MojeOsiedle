@@ -1,32 +1,37 @@
-﻿using Apis;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using MO.Apis;
 using MO.LiveChat.Configs;
+using MO.LiveChat.Data;
+using MO.LiveChat.Interfaces;
 
 namespace MO.LiveChat.Services;
 
 public class UserUpdater : BackgroundService
 {
     private readonly ILogger<UserUpdater> logger;
-    private readonly UserService userService;
-    private readonly ChatUsersService chatUsersService;
+    private readonly AuthService authService;
     private readonly IOptionsMonitor<UserUpdaterConfiguration> configuration;
+    private readonly IServiceProvider serviceProvider;
 
-    public UserUpdater(ILogger<UserUpdater> logger, UserService userService, ChatUsersService chatUsersService, IOptionsMonitor<UserUpdaterConfiguration> configuration)
+    public UserUpdater(ILogger<UserUpdater> logger, AuthService authService, IOptionsMonitor<UserUpdaterConfiguration> configuration, IServiceProvider serviceProvider)
     {
         this.logger = logger;
-        this.userService = userService;
-        this.chatUsersService = chatUsersService;
+        this.authService = authService;
         this.configuration = configuration;
+        this.serviceProvider = serviceProvider;
     }
 
     public override Task StartAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation($"User updater service starts.");
+        
         return base.StartAsync(cancellationToken);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await Task.Delay(configuration.CurrentValue.UpdaterTimeSpanInSec, stoppingToken);
         while (!stoppingToken.IsCancellationRequested)
         {
             var userUpdaterConfig = configuration.CurrentValue;
@@ -35,8 +40,8 @@ public class UserUpdater : BackgroundService
                 if (!userUpdaterConfig.Activated)
                     continue;
                 logger.LogInformation("Updating users...");
-                await UpdateUsers();
-                logger.LogInformation("Users updated.");
+                var usersAdded = await AddNonExistingUsers();
+                logger.LogInformation($"{usersAdded} users was updated.");
             }
             catch (Exception ex)
             {
@@ -50,9 +55,21 @@ public class UserUpdater : BackgroundService
         }
     }
 
-    private async Task UpdateUsers()
+    private async Task<int> AddNonExistingUsers()
     {
+        var context = serviceProvider.CreateScope().ServiceProvider.GetService<LiveChatDbContext>();
+        if (context is null)
+            throw new Exception($"Cannot resolve {nameof(LiveChatDbContext)}");
+        var appUsers = (await authService.GetAllAsync()).Users;
         
+        foreach (var appUser in appUsers)
+        {
+            if (await context.ChatUsers.AnyAsync(c=>c.ChatUserId == appUser.UserId))
+                continue;
+            var chatUser = new ChatUser() { ChatUserId = appUser.UserId, Username = appUser.Username };
+            await context.ChatUsers.AddAsync(chatUser);
+        }
+        return await context.SaveChangesAsync();
     }
 
     public override Task StopAsync(CancellationToken cancellationToken)
