@@ -5,7 +5,7 @@ namespace MO.Auth.Interfaces;
 
 public interface IUsersApi
 {
-    const string GetByIdEndpoint = "{id}";
+    const string GetByIdEndpoint = "GetById";
     Task<ActionResult<GetByIdResponse>> GetById(Guid id);
     record GetByIdResponse(UserResponse UserResponse);
 
@@ -14,7 +14,7 @@ public interface IUsersApi
     Task<ActionResult<GetByUsernameResponse>> GetByUsername(string username);
     record GetByUsernameResponse(UserResponse UserResponse);
 
-    const string GetAllUsersEndpoint = "getAll";
+    const string GetAllUsersEndpoint = "GetAll";
     Task<ActionResult<GetAllUsersResponse>> GetAllUsers();
     record GetAllUsersResponse(List<UserResponse> Users);
 
@@ -34,13 +34,5 @@ public interface IUsersApi
         public string Username { get; set; }
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }
-
-        public void Deconstruct(out Guid UserId, out string Username, out string Email, out bool EmailConfirmed)
-        {
-            UserId = this.UserId;
-            Username = this.Username;
-            Email = this.Email;
-            EmailConfirmed = this.EmailConfirmed;
-        }
     }
 }
