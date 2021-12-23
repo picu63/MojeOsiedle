@@ -5,11 +5,15 @@ using MO.LiveChat.Configs;
 using MO.LiveChat.Data;
 using MO.LiveChat.Mappings;
 using MO.LiveChat.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Logging.AddSerilog(new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341/")
+    .CreateLogger());
 builder.Services.AddControllers();
 builder.Services.AddDbContext<LiveChatDbContext>(optionsBuilder => optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("LiveChatDb")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
