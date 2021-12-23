@@ -33,11 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="OpenAPIs\swagger.json" ClassName="MOUsersApi" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger1.json" CodeGenerator="NSwagCSharp" Namespace="Apis" ClassName="UserService">
+    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Namespace="MO.Apis" ClassName="AuthService">
       <SourceUri>https://localhost:7085/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>

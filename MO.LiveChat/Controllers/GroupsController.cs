@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using Apis;
+using MO.Apis;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,13 +24,13 @@ public class GroupsController : ControllerBase, IGroupsApi
     }
 
     [HttpGet(GetByIdEndpoint)]
-    [ProducesResponseType(typeof(GetByIdResponse), 200)]
+    [ProducesResponseType(typeof(IGroupsApi.GetByIdResponse), 200)]
     [ProducesResponseType(404)]
-    public async Task<ActionResult<GetByIdResponse>> GetById(Guid id)
+    public async Task<ActionResult<IGroupsApi.GetByIdResponse>> GetById(Guid id)
     {
         var entity = await dbContext.Groups.FirstOrDefaultAsync(g => g.GroupId == id);
         if (entity == null) return NotFound();
-        return Ok(new GetByIdResponse(entity.GroupId, entity.Name));
+        return Ok(new IGroupsApi.GetByIdResponse(entity.GroupId, entity.Name));
     }
 
     [HttpGet(GetAllEndpoint)]

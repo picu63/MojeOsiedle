@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Apis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MO.LiveChat.Data;
 
-public class LiveChatDbContext : IdentityDbContext<AuthUser>
+public class LiveChatDbContext : DbContext
 {
     public LiveChatDbContext(DbContextOptions options): base(options)
     {
@@ -34,14 +33,10 @@ public class LiveChatDbContext : IdentityDbContext<AuthUser>
     }
 }
 
-public class AuthUser : IdentityUser
-{
-    public ChatUser ChatUser { get; set; }
-}
-
 public class ChatUser
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid ChatUserId { get; set; }
     public string Username { get; set; }
     public List<Message> Messages { get; set; }

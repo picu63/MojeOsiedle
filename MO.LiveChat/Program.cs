@@ -1,5 +1,5 @@
-using Apis;
 using Microsoft.EntityFrameworkCore;
+using MO.Apis;
 using MO.LiveChat;
 using MO.LiveChat.Configs;
 using MO.LiveChat.Data;
@@ -15,9 +15,8 @@ builder.Services.AddDbContext<LiveChatDbContext>(optionsBuilder => optionsBuilde
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton(x=>new UserService(builder.Configuration.GetSection("Apis:MOAuth").Value, new HttpClient()));
+builder.Services.AddSingleton(x=>new AuthService(builder.Configuration.GetSection("Apis:MOAuth").Value, new HttpClient()));
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddTransient<ChatUsersService>();
 builder.Services.AddSingleton<UserUpdater>();
 builder.Services.AddOptions<UserUpdaterConfiguration>()
     .Bind(builder.Configuration.GetSection("UserUpdater"))
