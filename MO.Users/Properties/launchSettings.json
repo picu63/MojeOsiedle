@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "MO.Users": {
+    "MO.Auth": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

@@ -12,6 +12,7 @@ public class UsersDbContext : IdentityDbContext<AuthUser>
         Database.EnsureCreated();
     }
     public DbSet<User> AppUsers { get; set; }
+
 }
 public class AuthUser : IdentityUser
 {
