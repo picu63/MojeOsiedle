@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MO.Auth.Controllers;
 using MO.Auth.Data;
 using MO.Auth.Interfaces;
+using MO.Auth.Messages;
 
 namespace MO.Auth.Mappings;
 
@@ -13,5 +15,6 @@ public class MappingProfile : Profile
         CreateMap<AuthUser, IUsersApi.UserDto>()
             .ForMember(au=>au.UserId, o => o.MapFrom(user => user.Id))
             .ReverseMap();
+        CreateMap<Login, NewUserMessage>().ReverseMap();
     }
 }

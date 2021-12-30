@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a5d07914-8217-4625-bc9d-c28ac345348d</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,6 +43,10 @@
     <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Namespace="MO.Apis" ClassName="AuthService">
       <SourceUri>https://localhost:7085/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MO.Integration.MessagingBus\MO.Integration.MessagingBus.csproj" />
   </ItemGroup>
 
 </Project>

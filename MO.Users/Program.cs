@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MO.Auth.Data;
 using MO.Auth.Mappings;
+using MO.Integration.MessagingBus;
 using Serilog;
 using Serilog.Events;
 
@@ -15,6 +16,7 @@ builder.Logging.AddSerilog(new LoggerConfiguration()
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<IMessageBus, AzServiceBusMessageBus>(_ => new AzServiceBusMessageBus(builder.Configuration));
 builder.Services.AddDbContext<UsersDbContext>(optionsBuilder => optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("UsersDb")));
 builder.Services.AddIdentity<AuthUser, IdentityRole>().AddEntityFrameworkStores<UsersDbContext>();
 builder.Services.AddSwaggerGen();

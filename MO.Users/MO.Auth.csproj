@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>79749341-9729-4e98-83c4-85e1a730bd90</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,12 @@
     <Folder Include="Data\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Mappings\" />
+    <Folder Include="Messages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MO.Integration.Messages\MO.Integration.Messages.csproj" />
+    <ProjectReference Include="..\MO.Integration.MessagingBus\MO.Integration.MessagingBus.csproj" />
   </ItemGroup>
 
 </Project>

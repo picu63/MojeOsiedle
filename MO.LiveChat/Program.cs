@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MO.Apis;
+using MO.Integration.MessagingBus;
 using MO.LiveChat;
 using MO.LiveChat.Configs;
 using MO.LiveChat.Data;
@@ -18,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<LiveChatDbContext>(optionsBuilder => optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("LiveChatDb")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSingleton<IMessageBus, AzServiceBusMessageBus>(_ => new AzServiceBusMessageBus(builder.Configuration));
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(x=>new AuthService(builder.Configuration.GetSection("Apis:MOAuth").Value, new HttpClient()));
 builder.Services.AddAutoMapper(typeof(MappingProfile));
