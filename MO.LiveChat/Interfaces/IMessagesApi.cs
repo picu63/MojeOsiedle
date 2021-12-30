@@ -6,9 +6,9 @@ public interface IMessagesApi
 {
     const string GetMessagesFromGroupEndpoint = "group/{groupId}";
     Task<ActionResult<GetMessagesResponse>> GetMessages([FromQuery]Guid groupId);
-    record GetMessagesResponse(Guid GroupId, List<Message> Messages);
-    record Message(Guid MessageId, Guid UserId, string Text, List<Reaction> Reactions);
-    record Reaction(ReactionType ReactionType, Guid UserId);
+    record GetMessagesResponse(Guid GroupId, List<MessageDto> Messages);
+    record MessageDto(Guid MessageId, Guid UserId, string Text, List<ReactionDto> Reactions);
+    record ReactionDto(ReactionType ReactionType, Guid UserId);
     enum ReactionType { Like = 0, }
 
     const string NewMessageEndpoint = "new";

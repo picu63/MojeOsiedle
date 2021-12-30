@@ -8,15 +8,15 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Message, IMessagesApi.Message>()
+        CreateMap<Message, IMessagesApi.MessageDto>()
             .ForMember(m=>m.UserId, o => o.MapFrom(src => src.ChatUserId))
             .ReverseMap();
 
-        CreateMap<Reaction, IMessagesApi.Reaction>()
+        CreateMap<Reaction, IMessagesApi.ReactionDto>()
             .ForMember(dest => dest.UserId, o => o.MapFrom(src => src.ChatUserId))
             .ReverseMap();
 
-        CreateMap<Group, IGroupsApi.Group>()
+        CreateMap<Group, IGroupsApi.GroupDto>()
             .ReverseMap();
     }
 }

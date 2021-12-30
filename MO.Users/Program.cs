@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using MO.Auth.Data;
 using MO.Auth.Mappings;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Logging.AddSerilog(new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341/")
+    .WriteTo.Seq("http://localhost:5341/", LogEventLevel.Information)
     .CreateLogger());
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

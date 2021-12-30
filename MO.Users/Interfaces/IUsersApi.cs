@@ -7,22 +7,21 @@ public interface IUsersApi
 {
     const string GetByIdEndpoint = "GetById";
     Task<ActionResult<GetByIdResponse>> GetById(Guid id);
-    record GetByIdResponse(UserResponse UserResponse);
-
+    record GetByIdResponse(UserDto UserDto);
 
     const string GetByUsernameEndpoint = "GetByUsername";
     Task<ActionResult<GetByUsernameResponse>> GetByUsername(string username);
-    record GetByUsernameResponse(UserResponse UserResponse);
+    record GetByUsernameResponse(UserDto UserDto);
 
     const string GetAllUsersEndpoint = "GetAll";
     Task<ActionResult<GetAllUsersResponse>> GetAllUsers();
-    record GetAllUsersResponse(List<UserResponse> Users);
+    record GetAllUsersResponse(List<UserDto> Users);
 
 
-    class UserResponse
+    class UserDto
     {
-        public UserResponse() { }
-        public UserResponse(Guid UserId, string Username, string Email, bool EmailConfirmed)
+        public UserDto() { }
+        public UserDto(Guid UserId, string Username, string Email, bool EmailConfirmed)
         {
             this.UserId = UserId;
             this.Username = Username;

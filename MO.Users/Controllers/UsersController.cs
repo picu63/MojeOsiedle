@@ -29,7 +29,7 @@ public class UsersController : ControllerBase, IUsersApi
         var authUser = await userManager.Users.FirstOrDefaultAsync(u => u.Id == guidStr);
         if (authUser == null) 
             return NotFound();
-        return new GetByIdResponse(mapper.Map<UserResponse>(authUser));
+        return new GetByIdResponse(mapper.Map<UserDto>(authUser));
     }
 
 
@@ -42,7 +42,7 @@ public class UsersController : ControllerBase, IUsersApi
         if (authUser is null)
             return NotFound();
 
-        return new GetByUsernameResponse(new UserResponse(Guid.Parse(authUser.Id), authUser.UserName, authUser.Email, authUser.EmailConfirmed));
+        return new GetByUsernameResponse(new UserDto(Guid.Parse(authUser.Id), authUser.UserName, authUser.Email, authUser.EmailConfirmed));
     }
 
     [HttpGet(GetAllUsersEndpoint)]
@@ -50,7 +50,7 @@ public class UsersController : ControllerBase, IUsersApi
     [ProducesResponseType(404)]
     public async Task<ActionResult<GetAllUsersResponse>> GetAllUsers()
     {
-        var users = await userManager.Users.Select(u => mapper.Map<UserResponse>(u)).ToListAsync();
+        var users = await userManager.Users.Select(u => mapper.Map<UserDto>(u)).ToListAsync();
         if (!users.Any())
             return NotFound("There are no users in the database.");
         return new GetAllUsersResponse(users);

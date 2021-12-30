@@ -18,6 +18,6 @@ public interface IGroupsApi
 
     const string GetAllEndpoint = "all";
     Task<ActionResult<GetAllResponse>> GetAll();
-    record GetAllResponse(List<Group> Groups);
-    record Group(Guid GroupId, string Name);
+    record GetAllResponse(List<GroupDto> Groups);
+    record GroupDto(Guid GroupId, string Name);
 }

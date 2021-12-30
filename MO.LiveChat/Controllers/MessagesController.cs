@@ -28,7 +28,7 @@ namespace MO.LiveChat.Controllers
             var entities = await context.Messages.Where(m => m.GroupId == groupId).ToListAsync();
 
             return Ok(new GetMessagesResponse(groupId,
-                entities.Select(e => mapper.Map<IMessagesApi.Message>(e)).ToList()));
+                entities.Select(e => mapper.Map<IMessagesApi.MessageDto>(e)).ToList()));
         }
 
         [HttpPut(NewMessageEndpoint)]

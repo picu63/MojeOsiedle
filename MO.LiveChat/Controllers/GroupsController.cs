@@ -37,7 +37,7 @@ public class GroupsController : ControllerBase, IGroupsApi
     public async Task<ActionResult<GetAllResponse>> GetAll()
     {
         var groups = await dbContext.Groups.ToListAsync();
-        return Ok(new GetAllResponse(groups.Select(g=>mapper.Map<IGroupsApi.Group>(g)).ToList()));
+        return Ok(new GetAllResponse(groups.Select(g=>mapper.Map<IGroupsApi.GroupDto>(g)).ToList()));
     }
 
     [HttpPut(AddNewEndpoint)]

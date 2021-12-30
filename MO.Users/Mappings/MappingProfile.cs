@@ -10,7 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<string, Guid>()
             .ConvertUsing(value => Guid.Parse(value));
-        CreateMap<AuthUser, IUsersApi.UserResponse>()
+        CreateMap<AuthUser, IUsersApi.UserDto>()
             .ForMember(au=>au.UserId, o => o.MapFrom(user => user.Id))
             .ReverseMap();
     }
