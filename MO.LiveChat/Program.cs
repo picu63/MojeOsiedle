@@ -6,6 +6,7 @@ using MO.LiveChat.Configs;
 using MO.LiveChat.Data;
 using MO.LiveChat.Mappings;
 using MO.LiveChat.Services;
+using MO.LiveChat.Worker;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,11 +20,11 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<LiveChatDbContext>(optionsBuilder => optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("LiveChatDb")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSingleton<IMessageBus, AzServiceBusMessageBus>(_ => new AzServiceBusMessageBus(builder.Configuration));
+builder.Services.AddScoped<IChatUserService, ChatUserService>();
+builder.Services.AddHostedService<UserUpdater>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(x=>new AuthService(builder.Configuration.GetSection("Apis:MOAuth").Value, new HttpClient()));
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddSingleton<UserUpdater>();
 builder.Services.AddOptions<UserUpdaterConfiguration>()
     .Bind(builder.Configuration.GetSection("UserUpdater"))
     .ValidateDataAnnotations()
@@ -44,7 +45,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.Services.GetService<UserUpdater>().StartAsync(app.Services.GetService<IHostApplicationLifetime>().ApplicationStopping);
 
 app.Run();

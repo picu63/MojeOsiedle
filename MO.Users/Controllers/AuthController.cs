@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MO.Auth.Data;
@@ -8,8 +11,8 @@ using MO.Integration.MessagingBus;
 
 namespace MO.Auth.Controllers;
 
-[ApiController]
-[Route("[controller]/[action]")]
+//[ApiController]
+[Microsoft.AspNetCore.Mvc.Route("[controller]/[action]")]
 public class AuthController : ControllerBase
 {
     private readonly ILogger<AuthController> logger;
@@ -44,7 +47,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Register(Login login)
+    public async Task<IActionResult> Register([FromBody]Login login)
     {
         if (context.AppUsers.Any(u => u.Username == login.Username))
             return BadRequest("User Already Exists");
@@ -56,12 +59,12 @@ public class AuthController : ControllerBase
 
         var result = await userManager.CreateAsync(user, login.Password);
         if (!result.Succeeded) return BadRequest(result.Errors.FirstOrDefault()?.Description);
-
-        var newUserMessage = mapper.Map<NewUserMessage>(login);
-
+        var registeredUserGuid = await userManager.FindByNameAsync(login.Username);
+        var newUserMessage = mapper.Map<NewUserMessage>(user);
+        newUserMessage.MessageId = Guid.Parse(registeredUserGuid.Id);
         try
         {
-            await messageBus.PublishMessage(newUserMessage, "newUserMessage");
+            await messageBus.PublishMessage(newUserMessage, "newuserrequest"); // TODO move to configuration
         }
         catch (Exception e)
         {
@@ -81,4 +84,21 @@ public class AuthController : ControllerBase
     }
 }
 
-public record Login(string Username, string Password);
+public class Login
+{
+    public Login(string Username, string Password)
+    {
+        this.Username = Username;
+        this.Password = Password;
+    }
+
+    public string Username { get; init; }
+    [DataType(DataType.Password)]
+    public string Password { get; init; }
+
+    public void Deconstruct(out string Username, out string Password)
+    {
+        Username = this.Username;
+        Password = this.Password;
+    }
+}

@@ -10,4 +10,6 @@ public class UserUpdaterConfiguration
     /// </summary>
     [Range(5, int.MaxValue)]
     public int UpdaterTimeSpanInSec { get; set; }
+    public string SubscriptionName { get; set; }
+    public string TopicName { get; set; }
 }

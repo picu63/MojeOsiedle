@@ -2,6 +2,6 @@
 
 public class IntegrationBaseMessage
 {
-    public Guid Id { get; set; }
-    public DateTime CreationDateTime { get; set; }
+    public Guid MessageId { get; set; }
+    public DateTime CreationDateTime { get; set; } = DateTime.Now;
 }

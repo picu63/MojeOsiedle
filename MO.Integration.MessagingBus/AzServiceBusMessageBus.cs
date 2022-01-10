@@ -1,33 +1,35 @@
 ﻿using System.Text;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Azure.ServiceBus.Core;
+using System.Text.Json;
+using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using MO.Integration.Messages;
-using Newtonsoft.Json;
 
 namespace MO.Integration.MessagingBus;
 
 public class AzServiceBusMessageBus: IMessageBus
 {
-    public AzServiceBusMessageBus(IConfiguration configuration)
-    {
-        this.connectionString = configuration.GetSection("ServiceBusConnectionString").Value;
-    }
 
-    private readonly string connectionString;
+    // the client that owns the connection and can be used to create senders and receivers
+    private static ServiceBusClient client;
+
+    public AzServiceBusMessageBus(string connectionString)
+    {
+        client = new ServiceBusClient(connectionString);
+    }
 
     public async Task PublishMessage(IntegrationBaseMessage message, string topicName)
     {
-        ISenderClient topicClient = new TopicClient(connectionString, topicName);
+        var sender = client.CreateSender(topicName);
+        // create a batch 
+        using var messageBatch = await sender.CreateMessageBatchAsync();
 
-        var jsonMessage = JsonConvert.SerializeObject(message);
-        var serviceBusMessage = new Message(Encoding.UTF8.GetBytes(jsonMessage))
+        if (!messageBatch.TryAddMessage(new ServiceBusMessage(JsonSerializer.Serialize((object)message))))
         {
-            CorrelationId = Guid.NewGuid().ToString()
-        };
-
-        await topicClient.SendAsync(serviceBusMessage);
-        Console.WriteLine($"Sent message to {topicClient.Path}");
-        await topicClient.CloseAsync();
+            // if it is too large for the batch
+            throw new Exception($"The message {message.MessageId} is too large to fit in the batch.");
+        }
+        // Use the producer client to send the batch of messages to the Service Bus queue
+        await sender.SendMessagesAsync(messageBatch);
+        Console.WriteLine($"A batch of message has been published to the queue.");
     }
 }

@@ -15,6 +15,7 @@ public class MappingProfile : Profile
         CreateMap<AuthUser, IUsersApi.UserDto>()
             .ForMember(au=>au.UserId, o => o.MapFrom(user => user.Id))
             .ReverseMap();
-        CreateMap<Login, NewUserMessage>().ReverseMap();
+        CreateMap<AuthUser, NewUserMessage>()
+            .ForMember(message=>message.UserId, o => o.MapFrom(l => l.Id)).ReverseMap();
     }
 }

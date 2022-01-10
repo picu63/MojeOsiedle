@@ -16,7 +16,7 @@ builder.Logging.AddSerilog(new LoggerConfiguration()
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSingleton<IMessageBus, AzServiceBusMessageBus>(_ => new AzServiceBusMessageBus(builder.Configuration));
+builder.Services.AddSingleton<IMessageBus, AzServiceBusMessageBus>(_ => new AzServiceBusMessageBus(builder.Configuration.GetSection("ServiceBusConnectionString").Value));
 builder.Services.AddDbContext<UsersDbContext>(optionsBuilder => optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("UsersDb")));
 builder.Services.AddIdentity<AuthUser, IdentityRole>().AddEntityFrameworkStores<UsersDbContext>();
 builder.Services.AddSwaggerGen();
